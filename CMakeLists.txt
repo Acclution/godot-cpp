@@ -38,7 +38,7 @@ project(godot-cpp)
 cmake_minimum_required(VERSION 3.6)
 
 # Change the output directory to the bin directory
-set(BUILD_PATH ${CMAKE_SOURCE_DIR}/bin)
+set(BUILD_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${BUILD_PATH}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${BUILD_PATH}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BUILD_PATH}")
@@ -133,22 +133,22 @@ endif()
 # Generate source from the bindings file
 message(STATUS "Generating Bindings")
 execute_process(COMMAND "python" "-c" "import binding_generator; binding_generator.generate_bindings(\"${GODOT_CUSTOM_API_FILE}\")"
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 	RESULT_VARIABLE GENERATION_RESULT
 	OUTPUT_VARIABLE GENERATION_OUTPUT)
 message(STATUS ${GENERATION_RESULT} ${GENERATION_OUTPUT})
 
 # Get Sources
-file(GLOB_RECURSE SOURCES src/*.c**)
-file(GLOB_RECURSE HEADERS include/*.h**)
+file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c**)
+file(GLOB_RECURSE HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h**)
 
 # Define our godot-cpp library
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_include_directories(${PROJECT_NAME}
 	PRIVATE
-	include
-	include/core
-	include/gen
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_SOURCE_DIR}/include/core
+	${CMAKE_CURRENT_SOURCE_DIR}/include/gen
 )
 
 # Put godot headers as SYSTEM PUBLIC to exclude warnings from irrelevant headers
